@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "solar_apocalypse",
+  "version": "${version}",
+  "name": "solar_apocalypse",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/shado/solar_apocalypse"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/solar_apocalypse/textures/item/mod_icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.shadowmaster435.solar_apocalypse.client.SolarApocalypseClient"
+    ],
+    "main": [
+      "org.shadowmaster435.solar_apocalypse.SolarApocalypse"
+    ]
+  },
+  "mixins": [
+    "solar_apocalypse.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "dry_soil_place": {
+    "sounds": [
+      "solar_apocalypse:block_sounds/break/dry_soil_break1",
+      "solar_apocalypse:block_sounds/break/dry_soil_break2",
+      "solar_apocalypse:block_sounds/break/dry_soil_break3"
+    ]
+  },
+
+  "dry_soil_dig": {
+    "sounds": [
+      "solar_apocalypse:block_sounds/step/dry_soil_step1",
+      "solar_apocalypse:block_sounds/step/dry_soil_step2",
+      "solar_apocalypse:block_sounds/step/dry_soil_step3"
+    ]
+  },
+  "wilted_grass_block_place": {
+    "sounds": [
+      "solar_apocalypse:block_sounds/break/wilted_grass_block_break1",
+      "solar_apocalypse:block_sounds/break/wilted_grass_block_break2",
+      "solar_apocalypse:block_sounds/break/wilted_grass_block_break3",
+      "solar_apocalypse:block_sounds/break/wilted_grass_block_break4"
+    ]
+  },
+  "wilted_grass_place": {
+    "sounds": [
+      "solar_apocalypse:block_sounds/break/wilted_grass_break1",
+      "solar_apocalypse:block_sounds/break/wilted_grass_break2",
+      "solar_apocalypse:block_sounds/break/wilted_grass_break3",
+      "solar_apocalypse:block_sounds/break/wilted_grass_break4"
+    ]
+  },
+   "wilted_grass_block_dig": {
+    "sounds": [
+      "solar_apocalypse:block_sounds/step/wilted_grass_block_step1",
+      "solar_apocalypse:block_sounds/step/wilted_grass_block_step2",
+      "solar_apocalypse:block_sounds/step/wilted_grass_block_step3",
+      "solar_apocalypse:block_sounds/step/wilted_grass_block_step4"
+    ]
+  },
+  "wilted_grass_dig": {
+    "sounds": [
+      "solar_apocalypse:block_sounds/step/wilted_grass_step1",
+      "solar_apocalypse:block_sounds/step/wilted_grass_step2",
+      "solar_apocalypse:block_sounds/step/wilted_grass_step3",
+      "solar_apocalypse:block_sounds/step/wilted_grass_step4"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "block.solar_apocalypse.iron_glass": "Iron Glass",
+  "block.solar_apocalypse.dry_soil": "Dry Soil",
+  "block.solar_apocalypse.wilted_grass_block": "Wilted Grass Block",
+  "block.solar_apocalypse.wilted_oak_leaves": "Wilted Oak Leaves",
+  "block.solar_apocalypse.wilted_birch_leaves": "Wilted Birch Leaves",
+  "block.solar_apocalypse.wilted_spruce_leaves": "Wilted Spruce Leaves",
+  "block.solar_apocalypse.wilted_jungle_leaves": "Wilted Jungle Leaves",
+  "block.solar_apocalypse.wilted_acacia_leave": "Wilted Acacia Leaves",
+  "block.solar_apocalypse.wilted_dark_oak_leaves": "Wilted Dark Oak Leaves",
+  "block.solar_apocalypse.wilted_mangrove_leaves": "Wilted Mangrove Leaves",
+  "block.solar_apocalypse.wilted_azalea_leaves": "Wilted Azalea Leaves",
+  "block.solar_apocalypse.wilted_flowering_azlea_leaves": "Wilted Flowering Azalea Leaves",
+  "block.solar_apocalypse.wilted_cherry_leaves": "Wilted Cherry Leaves",
+  "block.solar_apocalypse.wilted_grass": "Wilted Grass",
+  "block.solar_apocalypse.wilted_tall_grass": "Wilted Tall Grass",
+  "block.solar_apocalypse.wilted_fern": "Wilted Fern",
+
+  "itemGroup.solar_apocalypse.mod_tab": "Solar Apocalypse"
+
+}
