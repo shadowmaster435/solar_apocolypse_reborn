@@ -1,0 +1,15 @@
+{
+	"replace": false,
+  "values": [
+    "solar_apocalypse:wilted_jungle_leaves",
+    "solar_apocalypse:wilted_oak_leaves",
+    "solar_apocalypse:wilted_spruce_leaves",
+    "solar_apocalypse:wilted_dark_oak_leaves",
+    "solar_apocalypse:wilted_acacia_leaves",
+    "solar_apocalypse:wilted_birch_leaves",
+    "solar_apocalypse:wilted_azalea_leaves",
+    "solar_apocalypse:wilted_flowering_azalea_leaves",
+    "solar_apocalypse:wilted_mangrove_leaves",
+    "solar_apocalypse:wilted_cherry_leaves"
+  ]
+}

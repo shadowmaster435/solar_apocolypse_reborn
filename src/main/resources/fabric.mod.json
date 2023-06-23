@@ -22,6 +22,8 @@
   "mixins": [
     "solar_apocalypse.mixins.json"
   ],
+  "accessWidener" : "solar_apocalypse.accesswidener",
+
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",

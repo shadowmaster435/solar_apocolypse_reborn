@@ -1,37 +1,39 @@
 package org.shadowmaster435.solar_apocalypse.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.WaterFluid;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.*;
-import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.world.tick.TickPriority;
+import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import org.joml.Matrix4f;
 import org.shadowmaster435.solar_apocalypse.config.SaveFile;
 import org.shadowmaster435.solar_apocalypse.registry.ModBlocks;
-import org.joml.Matrix4f;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class MiscUtil {
@@ -44,6 +46,7 @@ public class MiscUtil {
     public static int phase_change_delay = 3;
 
     public static Identifier moon_texture = new Identifier("solar_apocalypse","textures/moon/moon1");
+
     public static int day = 0;
     public static int day_time = 1;
 
@@ -111,10 +114,6 @@ public class MiscUtil {
         }
     }
 
-    public static void debugthing(World world) {
-        System.out.println();
-    }
-
     public static Block[] full_remove_day_3 = {
             Blocks.WATER
     };
@@ -146,10 +145,9 @@ public class MiscUtil {
 
 
     public static void burn_entity(Entity entity, BlockPos block_pos) {
+        if (MiscUtil.can_see_sky_safely(entity.getEntityWorld(), block_pos, 3) && !(entity instanceof ItemEntity)) {
+            if (entity.getEntityWorld().isDay() && entity.getEntityWorld().getRegistryKey() == World.OVERWORLD) {
 
-
-        if (MiscUtil.can_see_sky_safely(entity.getEntityWorld(), block_pos, 3)) {
-            if (entity.getEntityWorld().isDay()) {
                 if (entity instanceof PlayerEntity player) {
                     if (!player.isCreative() && !player.isSpectator()) {
                         entity.setFireTicks(100);
@@ -160,11 +158,151 @@ public class MiscUtil {
             }
         }
     }
+
+    public static void boil_entity(Entity entity, BlockPos pos) {
+        boolean is_player_and_survival = entity instanceof PlayerEntity player && player.isSpectator() && player.isCreative();
+
+        boolean a = should_take_boil_damage(entity.getEntityWorld(), pos) && !is_player_and_survival;
+        if (a) {
+            entity.damage(entity.getDamageSources().generic(), 1);
+        }
+    }
     public static boolean can_see_sky_safely(World world, BlockPos pos, int day_count) {
-        boolean is_safe = false;
+        return world.isSkyVisible(pos) && !world.isClient && day >= day_count;
+    }
+    public static boolean can_see_sky_safely_excluding_water(World world, BlockPos pos, int day_count) {
+        return world.isSkyVisibleAllowingSea(pos) && !world.isClient && day >= day_count && world.isDay();
+    }
+    public static boolean can_see_sky_safely_excluding_water_client(World world, BlockPos pos, int day_count) {
+
+        return world.isSkyVisibleAllowingSea(pos) && day >= day_count && world.isDay();
+    }
+    public static boolean can_see_sky_safely_blockview(BlockRenderView world, BlockPos pos, int day_count) {
+/*        if (MinecraftClient.getInstance().getServer() != null) {
+            if (MinecraftClient.getInstance().getServer().getOverworld().isDay()) {
+                return world.isSkyVisible(pos) && day >= day_count;
+
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }*/
+        return true;
+    }
+    public static boolean should_take_boil_damage(World world, BlockPos pos) {
+        return (world.getBlockState(pos).isOf(Blocks.WATER) || world.getFluidState(pos).isOf(Fluids.FLOWING_WATER) || world.getFluidState(pos).isOf(Fluids.WATER)) && can_see_sky_safely_excluding_water(world, pos.add(0,1,0), 3);
+    }
+
+    public static int iterate_tracking = 0;
+    public static List<BlockPos> queued = new ArrayList<>();
+    public static List<BlockPos> queued_waterlogged = new ArrayList<>();
+
+    public static void evaporate(World world, BlockPos default_pos) {
+
+        boolean result = false;
+        boolean air_above = world.isAir(default_pos.offset(Direction.UP));
+        if (can_see_sky_safely(world, default_pos, 2) && air_above) {
+            for (int i = 0; i < 128; ++i) {
+                iterate_tracking += 1;
+
+                BlockPos pos = default_pos.offset(Direction.DOWN, i);
+                boolean kelp = world.getBlockState(pos).isOf(Blocks.KELP_PLANT) || world.getBlockState(pos).isOf(Blocks.KELP);
+                boolean seagrass = world.getBlockState(pos).isOf(Blocks.SEAGRASS) || world.getBlockState(pos).isOf(Blocks.TALL_SEAGRASS);
+                boolean sea_pickles = world.getBlockState(pos).isOf(Blocks.SEA_PICKLE);
+                boolean water = world.getBlockState(pos).isOf(Blocks.WATER) && !world.getFluidState(pos).isOf(Fluids.FLOWING_WATER);
+
+                boolean waterlogged = !sea_pickles && !seagrass && !kelp && world.getBlockState(pos).contains(Properties.WATERLOGGED);
+                evaporate_under_overhangs(world, pos);
+
+                if (kelp || seagrass || sea_pickles || water && !queued.contains(pos)) {
+                    queued.add(pos);
+                  //  world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                }
+                if (waterlogged) {
+                    if (!queued_waterlogged.contains(pos)) {
+                        if (world.getBlockState(pos).get(Properties.WATERLOGGED)) {
+                           // queued_waterlogged.add(pos);
+                            //world.setBlockState(pos, world.getBlockState(pos).with(Properties.WATERLOGGED, false), Block.NOTIFY_ALL, 0);
+                        }
+                    }
+                }
+            }
+        }
+        remove_queued(world);
+    }
+
+    public static void evaporate_under_overhangs(World world, BlockPos original_pos) {
+        for (Direction dir : Direction.values()) {
+
+            if (should_evaporate(world, original_pos.offset(dir))) {
+                if (!queued.contains(original_pos)) {
+                    queued.add(original_pos);
+                }
+                iterate_tracking += 1;
+                for (int i = 1; i < 8; ++i) {
+                    BlockPos offset_1 = original_pos.offset(dir);
+                    if (should_evaporate(world, offset_1)) {
+                        iterate_tracking += 1;
+                        if (!queued.contains(offset_1)) {
+                            queued.add(offset_1);
+                        }
+                        for (int d = 1; d < 128; ++d) {
+
+                            BlockPos offset_2 = offset_1.offset(Direction.DOWN, d);
 
 
-        return world.isSkyVisible(pos) && day >= day_count;
+                            if (world.getBlockState(offset_2).isOf(Blocks.WATER) ) {
+                                iterate_tracking += 1;
+                                if (!queued.contains(offset_2)) {
+                                    queued.add(offset_2);
+                                }
+
+                            } else {
+                                break;
+                            }
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+
+    }
+    public static boolean removal_finished = true;
+    public static void remove_queued(World world) {
+        iterate_tracking = 0;
+        removal_finished = true;
+        for (BlockPos pos : queued) {
+            if (pos == queued.get(queued.size() - 1)) {
+                removal_finished = false;
+                if (queued.size() > 512) { // Max Queued Column Blocks
+                    queued.clear();
+                    removal_finished = true;
+
+                }
+                break;
+            }
+            iterate_tracking += 1;
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL, 1);
+        }
+        // leaves some positions behind but is a good compromise
+        if (queued.size() > 0 && queued.size() < 16 && !removal_finished) {
+            removal_finished = true;
+            queued.clear();
+        }
+
+    }
+
+    public static boolean should_evaporate(World world, BlockPos pos) {
+        boolean kelp = world.getBlockState(pos).isOf(Blocks.KELP_PLANT) || world.getBlockState(pos).isOf(Blocks.KELP);
+        boolean seagrass = world.getBlockState(pos).isOf(Blocks.SEAGRASS) || world.getBlockState(pos).isOf(Blocks.TALL_SEAGRASS);
+        boolean sea_pickles = world.getBlockState(pos).isOf(Blocks.SEA_PICKLE);
+
+        return (world.getBlockState(pos).isOf(Blocks.WATER) || kelp || seagrass || sea_pickles) && !world.isSkyVisibleAllowingSea(pos);
     }
 
     public static Block[] random_water_spawn_melting = {Blocks.SNOW_BLOCK, Blocks.PACKED_ICE};
@@ -180,6 +318,9 @@ public class MiscUtil {
             IntegratedServer server = MinecraftClient.getInstance().getServer();
             if (server != null && server.getOverworld().isDay()) {
                 if (can_see_sky_safely(world, pos, 2)) {
+                    if (world.getBlockState(pos.add(0,1,0)).isOf(Blocks.WATER)) {
+                        System.out.println("water found at" + pos);
+                    }
                     BlockState before = world.getBlockState(pos.subtract((new Vec3i(0, 1, 0))));
                     world.setBlockState(pos.subtract(new Vec3i(0, 1, 0)), MiscUtil.blockstate_changer(world, pos.subtract(new Vec3i(0, 1, 0))),Block.NOTIFY_ALL);
                     BlockState after = world.getBlockState(pos.subtract((new Vec3i(0, 1, 0))));
@@ -248,5 +389,14 @@ public class MiscUtil {
             return worldAccess.getBlockState(pos);
         }
     }
+
+    public static Sprite[] get_water_sprites(boolean boiling) {
+        Sprite boiling_still = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("solar_apocalypse","block/boiling_water_still")).getSprite();
+        Sprite boiling_flow = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("solar_apocalypse","block/boiling_water_flow")).getSprite();
+        Sprite still = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft","block/water_still")).getSprite();
+        Sprite flow = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft","block/water_flow")).getSprite();
+        return boiling ? new Sprite[]{boiling_still, boiling_flow} : new Sprite[]{still, flow};
+    }
+
 
 }

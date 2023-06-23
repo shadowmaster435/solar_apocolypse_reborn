@@ -1,24 +1,14 @@
 package org.shadowmaster435.solar_apocalypse.mixin;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockStateRaycastContext;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
-import org.shadowmaster435.solar_apocalypse.registry.ModBlocks;
 import org.shadowmaster435.solar_apocalypse.util.HeatManager;
 import org.shadowmaster435.solar_apocalypse.util.MiscUtil;
-import org.shadowmaster435.solar_apocalypse.util.PersistantStates;
-import org.shadowmaster435.solar_apocalypse.util.PlayerState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Entity.class)
@@ -73,14 +62,8 @@ public abstract class EntityMixin {
     @Inject(at = @At("TAIL"), method = "tick")
     public void tick(CallbackInfo ci) {
         HeatManager.tick_heat(((Entity) (Object) this));
-
-    }
-
-    @Inject(at = @At("TAIL"), method = "tick")
-    public void cond_checker(CallbackInfo ci){
-        World world = MinecraftClient.getInstance().world;
         BlockPos block_pos = getBlockPos();
         MiscUtil.burn_entity((((Entity) (Object) this)), block_pos);
-
+        MiscUtil.boil_entity((((Entity) (Object) this)), block_pos);
     }
 }

@@ -12,7 +12,10 @@
     "WorldMixin"
   ],
   "client": [
+    "ClientPlayerMixin",
+    "ClientWorldMixin",
     "InGameHudMixin",
+    "SpriteAtlasTextureAccessor",
     "WorldRendererMixin"
   ],
   "injectors": {

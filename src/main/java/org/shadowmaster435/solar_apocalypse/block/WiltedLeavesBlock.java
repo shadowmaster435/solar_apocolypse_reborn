@@ -1,6 +1,9 @@
 package org.shadowmaster435.solar_apocalypse.block;
 
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -21,6 +24,7 @@ public class WiltedLeavesBlock extends Block {
             world.setBlockState(pos.add(0,-1,0), this.getDefaultState(),Block.NOTIFY_ALL);
         }
     }
+
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
