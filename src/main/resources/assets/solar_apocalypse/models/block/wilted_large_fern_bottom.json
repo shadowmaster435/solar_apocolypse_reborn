@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "solar_apocalypse:block/wilted_large_fern_bottom"
+  }
+}

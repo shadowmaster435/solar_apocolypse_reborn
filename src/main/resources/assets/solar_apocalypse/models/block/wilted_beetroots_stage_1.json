@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "solar_apocalypse:block/wilted_beetroots_stage_1"
+  }
+}

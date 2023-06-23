@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"4": "block/wilted_dandelion",
+		"4": "solar_apocalypse:block/wilted_dandelion",
 		"particle": "solar_apocalypse:block/wilted_dandelion"
 	},
 	"elements": [

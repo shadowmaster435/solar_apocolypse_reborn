@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "solar_apocalypse:block/wilted_sweet_berry_bush_stage_0"
+    },
+    "age=1": {
+      "model": "solar_apocalypse:block/wilted_sweet_berry_bush_stage_1"
+    }
+  }
+}

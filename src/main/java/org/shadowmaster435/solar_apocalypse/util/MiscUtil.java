@@ -32,7 +32,6 @@ import org.shadowmaster435.solar_apocalypse.config.SaveFile;
 import org.shadowmaster435.solar_apocalypse.registry.ModBlocks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -365,29 +364,8 @@ public class MiscUtil {
 
     public static BlockState blockstate_changer(WorldAccess worldAccess, BlockPos pos) {
 
-        Block block = worldAccess.getBlockState(pos).getBlock();
-        if (Arrays.stream(wilting).toList().contains(block)) {
-            if (block == Blocks.GRASS_BLOCK) {
-                if (day >= 2) {
-                    return ModBlocks.WILTED_GRASS_BLOCK.getDefaultState();
-                } else {
-                    return Blocks.GRASS_BLOCK.getDefaultState();
-                }
-            } else if (block == ModBlocks.WILTED_GRASS_BLOCK) {
-                if (day >= 3) {
-                    return ModBlocks.DRY_SOIL.getDefaultState();
-                } else {
-                    return ModBlocks.WILTED_GRASS_BLOCK.getDefaultState();
-                }
-            } else if (get_leaf_type(worldAccess.getBlockState(pos)) != Blocks.AIR.getDefaultState()) {
-                    return get_leaf_type(worldAccess.getBlockState(pos));
-            } else {
-
-                return Blocks.AIR.getDefaultState();
-            }
-        } else {
-            return worldAccess.getBlockState(pos);
-        }
+        BlockState block = worldAccess.getBlockState(pos);
+        return ModBlocks.get_wilted_from_unwilted(block);
     }
 
     public static Sprite[] get_water_sprites(boolean boiling) {

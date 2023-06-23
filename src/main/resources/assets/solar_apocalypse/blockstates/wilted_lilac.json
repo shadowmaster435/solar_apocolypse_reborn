@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "solar_apocalypse:block/wilted_lilac_bottom"
+    },
+    "half=upper": {
+      "model": "solar_apocalypse:block/wilted_lilac_top"
+    }
+  }
+}

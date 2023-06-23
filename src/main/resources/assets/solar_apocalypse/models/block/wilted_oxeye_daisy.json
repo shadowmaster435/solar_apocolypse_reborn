@@ -1,0 +1,6 @@
+{
+  "parent": "solar_apocalypse:block/directional_cross",
+  "textures": {
+    "cross": "solar_apocalypse:block/wilted_oxeye_daisy"
+  }
+}

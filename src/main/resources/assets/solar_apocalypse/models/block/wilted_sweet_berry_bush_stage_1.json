@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "crop": "solar_apocalypse:block/wilted_sweet_berry_bush_stage_1"
+  }
+}

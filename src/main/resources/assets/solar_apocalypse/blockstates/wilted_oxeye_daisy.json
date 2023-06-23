@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "solar_apocalypse:block/wilted_oxeye_daisy",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "solar_apocalypse:block/wilted_oxeye_daisy"
+    },
+    "facing=south": {
+      "model": "solar_apocalypse:block/wilted_oxeye_daisy",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "solar_apocalypse:block/wilted_oxeye_daisy",
+      "y": 270
+    }
+  }
+}

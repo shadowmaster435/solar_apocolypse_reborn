@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "solar_apocalypse:block/wilted_sunflower_bottom",
+      "y": 90
+    },
+    "half=upper": {
+      "model": "solar_apocalypse:block/wilted_sunflower_top",
+      "y": 90
+    }
+  }
+}
